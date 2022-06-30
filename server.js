@@ -7,7 +7,7 @@ PORT = process.env.port || 3000
 connectDB()
 const app = express()
 app.use(bodyParser.urlencoded({extended: true}))
-
+app.use('/register', require('./routes/register'))
 app.use('/users', require('./routes/api/users'))
 
 app.listen(PORT, (req, res) => {
