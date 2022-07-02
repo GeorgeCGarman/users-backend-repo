@@ -10,8 +10,14 @@ const handleLogin = async (req, res) => {
   if (!foundUser) return res.sendStatus(401)
   const match = await bcrypt.compare(password, foundUser.password)
   if (match) {
+    const role = foundUser.role
     const accessToken = jwt.sign(
-      {'username': foundUser.username},
+      {
+        'UserInfo': { 
+          'username': foundUser.username,
+          'role': foundUser.role
+        }
+      },
       process.env.ACCESS_TOKEN_SECRET,
       {expiresIn: '60s'}
     )
@@ -20,7 +26,10 @@ const handleLogin = async (req, res) => {
       process.env.REFRESH_TOKEN_SECRET,
       {expiresIn: '1d'}
     )
-    User.updateOne(foundUser, {refreshToken: refreshToken})
+    await User.updateOne({_id: foundUser.id}, {refreshToken: refreshToken}).exec()
+    // const newFoundUser = await User.find({_id: foundUser.id}).exec()
+    // res.json([result, newFoundUser])
+    
     res.cookie('jwt', refreshToken, {httpOnly: true, maxAge: 24 * 60 * 60* 1000})
     // res.json({'success': `User ${foundUser.username} is logged in`})
     res.json({accessToken})
