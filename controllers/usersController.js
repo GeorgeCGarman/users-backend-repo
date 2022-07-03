@@ -46,6 +46,9 @@ const updateUser = async (req, res) => {
 
   if (req.body?.username) user.username = req.body.username
   if (req.body?.password) user.password = req.body.password
+  if (req.body?.role) {
+    if (req.role == 'admin') user.role = req.body.role
+  }
 
   const result = await user.save()
   res.json(result)
