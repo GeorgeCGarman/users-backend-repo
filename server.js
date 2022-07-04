@@ -4,7 +4,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const verifyJWT = require('./middleware/verifyJWT')
 const cookieParser = require('cookie-parser')
-PORT = process.env.port || 3000
+PORT = process.env.PORT || 3000
 
 connectDB()
 const app = express()
