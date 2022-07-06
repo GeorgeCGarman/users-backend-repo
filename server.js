@@ -12,6 +12,7 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(cookieParser())
 app.use('/register', require('./routes/register'))
 app.use('/auth', require('./routes/auth'))
+app.use('/auth/google', require('./routes/oauth'))
 app.use('/refresh', require('./routes/refresh'))
 app.use('/logout', require('./routes/logout'))
 
