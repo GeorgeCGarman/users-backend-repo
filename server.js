@@ -2,6 +2,7 @@ require('dotenv').config()
 const connectDB = require('./config/dbConn')
 const express = require('express')
 const bodyParser = require('body-parser')
+const ensureAuth = require('./middleware/auth')
 const verifyJWT = require('./middleware/verifyJWT')
 const cookieParser = require('cookie-parser')
 PORT = process.env.PORT || 3000
@@ -15,6 +16,7 @@ app.use('/auth', require('./routes/auth'))
 app.use('/refresh', require('./routes/refresh'))
 app.use('/logout', require('./routes/logout'))
 
+app.use(ensureAuth)
 app.use(verifyJWT)
 app.use('/users', require('./routes/api/users'))
 
