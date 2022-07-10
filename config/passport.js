@@ -1,14 +1,14 @@
+const passport = require('passport')
 const User = require('../model/User')
+const bcrypt = require('bcrypt')
 require('dotenv').config()
-passport = require('passport')
 var GoogleStrategy = require('passport-google-oauth20').Strategy
-var JwtStrategy = require('passport-jwt').Strategy
-    ExtractJwt = require('passport-jwt').ExtractJwt
+var LocalStrategy = require('passport-local').Strategy
 
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/google/callback"
+    callbackURL: "http://localhost:3000/auth/google/callback" // change
     // userProfileURL: ""
   },
   async (accessToken, refreshToken, profile, cb) => {
@@ -31,23 +31,16 @@ passport.use(new GoogleStrategy({
   }
 ))
 
-var opts = {}
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken()
-opts.secretOrKey = 'secret'
-opts.issuer = 'accounts.examplesoft.com'
-opts.audience = 'yoursite.net'
-passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-    User.findOne({id: jwt_payload.sub}, function(err, user) {
-        if (err) {
-            return done(err, false)
-        }
-        if (user) {
-            return done(null, user)
-        } else {
-            return done(null, false)
-            // or you could create a new account
-        }
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    User.findOne({username: username}, async function (err, user) {
+      if (err) return done(err)
+      if (!user) return done(null, false)
+      const match = await bcrypt.compare(password, user.password)
+      if (!match) return done(null, false)
+      return done(null, user)
     })
-}))
+  }
+))
 
 module.exports = passport
