@@ -18,7 +18,7 @@ Register by providing username and password in as form
 
 ## Login
 
-`GET /auth`
+`POST /auth`
 
 Login as the new user to get a access token. This will last for 60s. Logging in also generates a new refresh token stored in the database and cookies.
 
@@ -48,7 +48,7 @@ Give username and password in request body. Admins and mods can create new users
 
 ## Update user
 
-`POST /users`
+`PUT /users`
 
 Give ID in request body and give new username and/or password. Mods can update users, but only admins can changes the user's role, so only admins can make a user a mod, or a mod an admin.
 
@@ -56,8 +56,14 @@ Give ID in request body and give new username and/or password. Mods can update u
 
 ## Delete user
 
-`POST /users`
+`DELETE /users`
 
 Give ID in request body. Only admins can delete users.
 
 ![Alt text](/screenshots/deleteUser.png)
+
+## Logout
+
+`GET /logout`
+
+Clears cookies and remove refresh token from database.
