@@ -1,4 +1,4 @@
-# API for users
+# users-backend
 
 This is a role-based CRUD backend API using express js to store users in a MongoDB database. Use Postman to send requests.
 
